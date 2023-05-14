@@ -1,0 +1,5 @@
+name: "OpenAI Moderation CodeQL config"
+
+paths-ignore:
+  - node_modules
+  - dist
