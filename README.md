@@ -2,6 +2,8 @@
 
 This action moderates user-submitted content
 
+# **THIS ACTION IS A WIP/POC AND IT CURRENTLY DOES NOT PERFORM ANY WORK**
+
 ## Inputs
 
 ### `openai-api-key`
