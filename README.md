@@ -12,8 +12,14 @@ This action moderates user-submitted content
 
 ## Example usage
 
+Create `.github/workflows/moderation.yml` with the follwoing content:
+
 ```yaml
 # TODO: Finish me
+on:
+  issue_comment:
+    types: [created, edited]
+
 uses: sgnn7/openai-moderation@<TODO>
 with:
   openai-api-key: ${{ secrets.OPENAI_API_KEY }}
