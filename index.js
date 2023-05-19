@@ -58,10 +58,10 @@ try {
     repo: repoName,
     comment_id: commentId,
     body: replacementMessage,
-  }).then(()=> {
+  }).then(() => {
     core.info(`Comment update success!`);
-  }, (err)=>{
-    throw new Error(err);
+  }, (err) => {
+    throw err;
   });
 
   /*
