@@ -1,10 +1,18 @@
 name: 'OpenAI Moderation'
 description: 'Moderate user content'
 inputs:
-  openai-api-key:
+  openai_api_key:
     description: 'OpenAPI API Key to use for this plugin'
     required: true
     default: ''
+  github_token:
+    description: 'Github token as provided by the Github Action (through secrets.GITHUB_TOKEN)'
+    required: true
+    default: ''
+  replacement_message:
+    description: 'Moderated comment replacement text'
+    required: false
+    default: '_**This comment has been found to violate our usage policy and has been removed by OpenAI Moderation**_'
 runs:
   using: 'node20'
   main: 'index.js'

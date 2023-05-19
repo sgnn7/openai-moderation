@@ -22,5 +22,6 @@ on:
 
 uses: sgnn7/openai-moderation@<TODO>
 with:
-  openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+  openai_api_key: ${{ secrets.OPENAI_API_KEY }}
+  github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
