@@ -2,12 +2,13 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 try {
-  const apiKeySanitizationPattern = /.*/
+  const apiKeySanitizationPattern = /.(?=.*....)/g
   // `openai-api-key` input defined in action metadata file
   const openAIApiKey = core.getInput('openai-api-key');
 
-  // TODO: Remove me
-  console.log(`API Key: ${openAIApiKey.replace(pattern, "X")}!`);
+  // Show debug info (sanitized key)
+  const sanitizedOpenAIApiKey = openAIApiKey.replace(apiKeySanitizationPattern, "*")
+  console.log(`API Key: ${sanitizedOpenAIApiKey}`)
 
   const time = (new Date()).toTimeString();
   core.setOutput("time", time);
