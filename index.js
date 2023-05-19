@@ -7,7 +7,7 @@ try {
   const openAIApiKey = core.getInput('openai-api-key');
 
   // TODO: Remove me
-  console.log(`API Key: ${openAIApiKey.replace(pattern, "X"}!`);
+  console.log(`API Key: ${openAIApiKey.replace(pattern, "X")}!`);
 
   const time = (new Date()).toTimeString();
   core.setOutput("time", time);
