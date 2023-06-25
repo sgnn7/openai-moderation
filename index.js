@@ -51,9 +51,6 @@ async function evaluateModerationScores(commentBody, openAIApiKey) {
 async function main() {
     const apiKeySanitizationPattern = /.(?=.*....)/g;
 
-    // TODO: Use action-trigerred comment content for the evaluation
-    const commentBody = 'This is a test comment body';
-
     // `openai_api_key` input defined in action metadata file
     const openAIApiKey = core.getInput('openai_api_key');
     if (isEmpty(openAIApiKey)) {
@@ -79,6 +76,13 @@ async function main() {
         throw new Error('Comment ID cannot be empty!');
     }
 
+    // `comment_body` input defined in action metadata file
+    const commentBody = context.payload.comment.body
+    if (isEmpty(commentBody)) {
+        core.info('Commend body was empty - skipping moderation step');
+        return;
+    }
+
     // Show debug info (with sanitized keys)
     core.info(`Github Repo: ${context.repo.owner}/${context.repo.repo}`);
 
@@ -100,7 +104,7 @@ async function main() {
     moderationScores = await evaluateModerationScores(commentBody, openAIApiKey);
     console.log('Body: ', util.inspect(moderationScores, true, 12, true));
 
-    const flagged = moderationScores.results.some((res) => res.flagged)
+    const flagged = moderationScores.results.some((res) => res.flagged);
     if (!flagged) {
         core.info('Content not flagged!');
         return;
@@ -108,6 +112,20 @@ async function main() {
 
     // Content is flagged - let's edit it
     core.info('*** CONTENT WAS FLAGGED! ***');
+
+    // Dig deeper into the results now that we know there's failures
+
+    // 1. Get all flagged results first
+    const flaggedCategories =  moderationScores.results.filter((res) => res.flagged)
+        // 2. Get the categories groups from those results
+        .map(matchingResult => matchingResult.categories)
+        // 3. Only keep the categories that resulted in the flagging
+        .map(categories => Object.keys(categories).filter((key) => categories[key]))
+        // 4. Flatten the structure so that we have a neat result
+        .flat();
+
+    core.info(`Flagged categories: ${flaggedCategories}`);
+
     core.info(`Updating comment: ${commentId} ...`);
 
     const octokit = github.getOctokit(githubToken);
@@ -125,11 +143,6 @@ async function main() {
     }, (err) => {
         throw err;
     });
-
-    /*
-    // Get the JSON webhook payload for the event that triggered the workflow
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
-    */
 }
 
 try {
